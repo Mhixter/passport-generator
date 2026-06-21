@@ -257,6 +257,55 @@
 .pp-fr-row-bot .pp-fr-field-num { flex: 1; }
 
 /* ════════════════════════════════════════
+   JAPAN LAYOUT
+════════════════════════════════════════ */
+.pp-jp-header {
+  position: relative; z-index: 3;
+  display: flex; align-items: center; justify-content: center;
+  gap: 18px; padding: 10px 20px 8px; border-bottom: 1px solid;
+}
+.pp-jp-logo-wrap { flex-shrink: 0; }
+.pp-jp-title { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.pp-jp-nippon {
+  font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic Pro', 'Yu Gothic', 'MS Gothic', serif;
+  font-size: 30px; font-weight: 700; letter-spacing: 4px; line-height: 1;
+}
+.pp-jp-japan {
+  font-size: 13px; font-weight: 900; letter-spacing: 8px;
+  margin-top: 4px; line-height: 1;
+}
+.pp-jp-passport-lbl {
+  font-size: 7.5px; font-weight: 500; letter-spacing: 1.5px;
+  margin-top: 5px; opacity: 0.75;
+}
+
+/* ════════════════════════════════════════
+   CHILE LAYOUT
+════════════════════════════════════════ */
+.pp-cl-header {
+  position: relative; z-index: 3;
+  display: flex; align-items: stretch;
+  padding: 8px 14px; border-bottom: 1px solid; gap: 12px;
+}
+.pp-cl-left {
+  display: flex; flex-direction: column; justify-content: center;
+  min-width: 90px;
+}
+.pp-cl-pasaporte { font-size: 14px; font-weight: 900; letter-spacing: 1.5px; }
+.pp-cl-passport  { font-size: 9px; font-weight: 600; letter-spacing: 1px; opacity: 0.7; margin-top: 2px; }
+.pp-cl-center {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+}
+.pp-cl-republic { font-size: 12px; font-weight: 800; letter-spacing: 2.5px; margin-top: 4px; }
+.pp-cl-stripes {
+  display: flex; flex-direction: column;
+  width: 10px; border-radius: 3px; overflow: hidden;
+  align-self: stretch; margin: 2px 0;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+/* ════════════════════════════════════════
    USA LAYOUT
 ════════════════════════════════════════ */
 .pp-usa-header {

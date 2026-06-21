@@ -757,6 +757,145 @@ function BrazilLayout({ data, t, mrz }) {
   )
 }
 
+function JapanLayout({ data, t, mrz }) {
+  const gold = '#8b6914'
+  const darkRed = '#7a0020'
+  const border = 'rgba(180,150,80,0.35)'
+  const ps = t.photoStyle || {}
+
+  return (
+    <>
+      <div className="pp-jp-header" style={{ borderBottomColor: border }}>
+        <div className="pp-jp-logo-wrap">
+          <Logo t={t} data={data} size={50} color={gold} />
+        </div>
+        <div className="pp-jp-title">
+          <div className="pp-jp-nippon" style={{ color: darkRed }}>日本国</div>
+          <div className="pp-jp-japan" style={{ color: darkRed }}>JAPAN</div>
+          <div className="pp-jp-passport-lbl" style={{ color: gold }}>旅券 / PASSPORT / PASSEPORT</div>
+        </div>
+      </div>
+
+      <div className="pp-id-bar" style={{ borderBottomColor: border }}>
+        <div className="pp-id-col">
+          <div className="pp-id-label" style={{ color: gold }}>型 / Type</div>
+          <div className="pp-id-val" style={{ color: '#111' }}>{data.type || 'P'}</div>
+        </div>
+        <div className="pp-id-col">
+          <div className="pp-id-label" style={{ color: gold }}>発行国 / Country</div>
+          <div className="pp-id-val" style={{ color: '#111' }}>JPN</div>
+        </div>
+        <div className="pp-id-col" style={{ marginLeft: 'auto' }}>
+          <div className="pp-id-label" style={{ color: gold }}>旅券番号 / Passport No.</div>
+          <div className="pp-id-val large" style={{ color: '#111' }}>{data.passportNo || 'AB1234567'}</div>
+        </div>
+      </div>
+
+      <div className="pp-body">
+        <div className="pp-photo-col">
+          <PhotoBox photo={data.photo} photoStyle={ps} width={148} height={185} />
+          <div className="pp-seal-wrap seal-bottom">
+            <div className="pp-seal-box"><Seal t={t} data={data} size={50} /></div>
+          </div>
+        </div>
+        <div className="pp-info-col">
+          <Field label="氏名 / Surname / Nom" value={data.surname} large ac={gold} />
+          <Field label="名 / Given names / Prénoms" value={data.givenName} large ac={gold} />
+          <Field label="国籍 / Nationality / Nationalité" value={data.nationality || 'JAPANESE'} ac={gold} />
+          <div className="pp-row">
+            <Field label="生年月日 / Date of birth / Date de naissance" value={data.dateOfBirth} ac={gold} />
+            <Field label="性別 / Sex / Sexe" value={data.sex} ac={gold} />
+          </div>
+          <Field label="本籍 / Registered domicile / Domicile" value={data.registeredDomicile} ac={gold} />
+          <div className="pp-row">
+            <Field label="交付年月日 / Date of issue" value={data.dateOfIssue} ac={gold} />
+            <Field label="有効期間満了日 / Date of expiry" value={data.dateOfExpiry} ac={gold} />
+          </div>
+          <Field label="発行官庁 / Issuing authority" value={data.authority} ac={gold} />
+          <div className="pp-field">
+            <div className="pp-fl" style={{ color: gold }}>所持人自署 / Signature of bearer / Signature du titulaire</div>
+            <SigDisplay data={data} accent={gold} />
+          </div>
+        </div>
+      </div>
+
+      <MRZSection mrz={mrz} mrzBg={t.mrzBg} mrzBdr={t.mrzBorder} />
+    </>
+  )
+}
+
+function ChileLayout({ data, t, mrz }) {
+  const blue = '#0d2d6e'
+  const red = '#c8102e'
+  const border = 'rgba(13,45,110,0.25)'
+  const ps = t.photoStyle || {}
+
+  return (
+    <>
+      <div className="pp-cl-header" style={{ borderBottomColor: border }}>
+        <div className="pp-cl-left">
+          <div className="pp-cl-pasaporte" style={{ color: blue }}>PASAPORTE</div>
+          <div className="pp-cl-passport"  style={{ color: blue }}>PASSPORT</div>
+        </div>
+        <div className="pp-cl-center">
+          <Logo t={t} data={data} size={48} color={blue} />
+          <div className="pp-cl-republic" style={{ color: blue }}>REPÚBLICA DE CHILE</div>
+        </div>
+        <div className="pp-cl-stripes">
+          <div style={{ flex: 1, background: red }} />
+          <div style={{ flex: 1, background: '#fff', opacity: 0.7 }} />
+          <div style={{ flex: 1, background: blue }} />
+        </div>
+      </div>
+
+      <div className="pp-id-bar" style={{ borderBottomColor: border }}>
+        <div className="pp-id-col">
+          <div className="pp-id-label" style={{ color: blue }}>Tipo / Type</div>
+          <div className="pp-id-val" style={{ color: '#111' }}>{data.type || 'P'}</div>
+        </div>
+        <div className="pp-id-col">
+          <div className="pp-id-label" style={{ color: blue }}>País / Country</div>
+          <div className="pp-id-val" style={{ color: '#111' }}>CHL</div>
+        </div>
+        <div className="pp-id-col" style={{ marginLeft: 'auto' }}>
+          <div className="pp-id-label" style={{ color: blue }}>N° Pasaporte / Passport No.</div>
+          <div className="pp-id-val large" style={{ color: '#111' }}>{data.passportNo || 'AB1234567'}</div>
+        </div>
+      </div>
+
+      <div className="pp-body">
+        <div className="pp-photo-col">
+          <PhotoBox photo={data.photo} photoStyle={ps} width={148} height={185} />
+          <div className="pp-seal-wrap seal-bottom">
+            <div className="pp-seal-box"><Seal t={t} data={data} size={46} /></div>
+          </div>
+        </div>
+        <div className="pp-info-col">
+          <Field label="Apellidos / Surname" value={data.surname} large ac={red} />
+          <Field label="Nombres / Given names" value={data.givenName} large ac={red} />
+          <Field label="Nacionalidad / Nationality" value={data.nationality || 'CHILENA'} ac={blue} />
+          <div className="pp-row">
+            <Field label="Fecha de nacimiento / Date of birth" value={data.dateOfBirth} ac={blue} />
+            <Field label="Sexo / Sex" value={data.sex} ac={blue} />
+          </div>
+          <Field label="Lugar de nacimiento / Place of birth" value={data.registeredDomicile} ac={blue} />
+          <div className="pp-row">
+            <Field label="Fecha de expedición / Date of issue" value={data.dateOfIssue} ac={blue} />
+            <Field label="Fecha de vencimiento / Date of expiry" value={data.dateOfExpiry} ac={blue} />
+          </div>
+          <Field label="Autoridad / Authority" value={data.authority} ac={blue} />
+          <div className="pp-field">
+            <div className="pp-fl" style={{ color: red }}>Firma / Signature</div>
+            <SigDisplay data={data} accent={red} />
+          </div>
+        </div>
+      </div>
+
+      <MRZSection mrz={mrz} mrzBg={t.mrzBg} mrzBdr={t.mrzBorder} />
+    </>
+  )
+}
+
 function USALayout({ data, t, mrz }) {
   const navy = '#002868'
   const red = '#b22234'
@@ -919,6 +1058,8 @@ const PassportCard = forwardRef(function PassportCard({ data, template, watermar
       )}
 
       {layout === 'default'   && <DefaultLayout   {...layoutProps} />}
+      {layout === 'japan'     && <JapanLayout     {...layoutProps} />}
+      {layout === 'chile'     && <ChileLayout     {...layoutProps} />}
       {layout === 'usa'       && <USALayout       {...layoutProps} />}
       {layout === 'uk'        && <UKLayout        {...layoutProps} />}
       {layout === 'australia' && <AustraliaLayout {...layoutProps} />}
