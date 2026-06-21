@@ -8,275 +8,286 @@
   font-family: 'Inter', sans-serif;
 }
 
+/* ── Backgrounds ── */
 .pp-bg-pattern {
-  position: absolute;
-  inset: 0;
-  background-size: auto;
-  background-repeat: repeat;
-  z-index: 0;
-  pointer-events: none;
+  position: absolute; inset: 0;
+  background-size: auto; background-repeat: repeat;
+  z-index: 0; pointer-events: none;
 }
-
 .pp-custom-bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-  pointer-events: none;
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center; background-repeat: no-repeat;
+  z-index: 0; pointer-events: none;
 }
-
 .pp-bg-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
+  position: absolute; inset: 0;
+  z-index: 0; pointer-events: none;
 }
-
 .pp-watermark-img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%) rotate(-30deg);
-  width: 48%;
-  pointer-events: none;
-  z-index: 2;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 48%; pointer-events: none; z-index: 2;
+  user-select: none; display: flex; align-items: center; justify-content: center;
 }
+.pp-watermark-img img { width: 100%; height: auto; opacity: 0.11; filter: grayscale(30%); object-fit: contain; }
 
-.pp-watermark-img img {
-  width: 100%;
-  height: auto;
-  opacity: 0.11;
-  filter: grayscale(30%);
-  object-fit: contain;
-}
-
+/* ── Shared: top bar (default layout) ── */
 .pp-top-bar {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  padding: 8px 14px 6px;
-  border-bottom: 1px solid;
-  gap: 8px;
+  position: relative; z-index: 3;
+  display: flex; align-items: center;
+  padding: 8px 14px 6px; border-bottom: 1px solid; gap: 8px;
 }
-
-.pp-logo-box {
-  width: 48px;
-  height: 48px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pp-logo-center {
-  position: absolute;
-  right: 14px;
-  top: 8px;
-}
-
-.pp-logo-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.pp-top-center {
-  flex: 1;
-  text-align: center;
-}
-
-.pp-top-center.align-left { text-align: left; padding-left: 10px; }
+.pp-logo-box { width: 48px; height: 48px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.pp-logo-center { position: absolute; right: 14px; top: 8px; }
+.pp-logo-box img { width: 100%; height: 100%; object-fit: contain; }
+.pp-top-center { flex: 1; text-align: center; }
+.pp-top-center.align-left  { text-align: left;  padding-left: 10px; }
 .pp-top-center.align-right { text-align: right; padding-right: 10px; }
+.pp-title-local { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; line-height: 1.35; }
+.pp-country-name { font-size: 15px; font-weight: 800; letter-spacing: 5px; margin-top: 2px; }
+.pp-passport-label { font-size: 9.5px; font-weight: 600; letter-spacing: 2.5px; margin-top: 1px; opacity: 0.8; }
 
-.pp-title-local {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  line-height: 1.35;
-}
-
-.pp-country-name {
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 5px;
-  margin-top: 2px;
-}
-
-.pp-passport-label {
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 2.5px;
-  margin-top: 1px;
-  opacity: 0.8;
-}
-
+/* ── Shared: id bar ── */
 .pp-id-bar {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  padding: 5px 14px;
-  border-bottom: 1px solid;
-  gap: 32px;
+  position: relative; z-index: 3;
+  display: flex; align-items: center;
+  padding: 5px 14px; border-bottom: 1px solid; gap: 32px;
 }
-
 .pp-id-col { display: flex; flex-direction: column; gap: 1px; }
+.pp-id-label { font-size: 8px; font-weight: 500; letter-spacing: 0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+.pp-id-val  { font-size: 15px; font-weight: 700; letter-spacing: 1px; color: #111; }
+.pp-id-val.large { font-size: 19px; font-weight: 800; letter-spacing: 2px; }
 
-.pp-id-label {
-  font-size: 8.5px;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 160px;
-}
-
-.pp-id-val {
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: #111;
-}
-
-.pp-id-val.large {
-  font-size: 19px;
-  font-weight: 800;
-  letter-spacing: 2px;
-}
-
+/* ── Shared: body ── */
 .pp-body {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  gap: 12px;
-  padding: 10px 14px;
+  position: relative; z-index: 3;
+  display: flex; gap: 12px; padding: 10px 14px;
 }
-
-.pp-photo-col {
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  position: relative;
-  width: 148px;
-}
-
+.pp-photo-col { display: flex; flex-direction: column; flex-shrink: 0; position: relative; width: 148px; }
 .pp-photo-box {
-  width: 148px;
-  height: 186px;
-  border: 1px solid;
-  background: rgba(0,0,0,0.06);
-  overflow: hidden;
-  border-radius: 2px;
-  flex-shrink: 0;
+  border: 1px solid; background: rgba(0,0,0,0.06); overflow: hidden;
+  border-radius: 2px; flex-shrink: 0;
+}
+.pp-photo-img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.pp-photo-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 13px; }
+.pp-photo-ph.small { font-size: 9px; }
+
+/* Small secondary photo (Indonesia, Australia) */
+.pp-photo-small {
+  width: 72px; height: 90px;
+  border: 1px solid; border-radius: 2px;
+  background: rgba(0,0,0,0.06); overflow: hidden; flex-shrink: 0;
 }
 
-.pp-photo-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-}
-
-.pp-photo-ph {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #aaa;
-  font-size: 13px;
-}
-
-.pp-seal-wrap {
-  display: flex;
-  margin-top: 8px;
-}
-
+.pp-seal-wrap { display: flex; margin-top: 8px; }
 .seal-bottom { align-items: flex-end; margin-top: 6px; }
-.seal-top { align-items: flex-start; margin-top: 4px; }
-.seal-right { justify-content: flex-end; }
+.seal-top    { align-items: flex-start; margin-top: 4px; }
+.seal-right  { justify-content: flex-end; }
+.pp-seal-box { width: 54px; height: 54px; display: flex; align-items: center; justify-content: center; }
 
-.pp-seal-box {
-  width: 54px;
-  height: 54px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pp-info-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
+.pp-info-col { flex: 1; display: flex; flex-direction: column; gap: 5px; }
 .pp-field { display: flex; flex-direction: column; gap: 1px; }
-
 .pp-fl {
-  font-size: 8.5px;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 8px; font-weight: 500; letter-spacing: 0.15px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.pp-fv { font-size: 13px; font-weight: 700; color: #111; letter-spacing: 0.4px; line-height: 1.25; }
+.pp-fv.large  { font-size: 16px; letter-spacing: 0.5px; }
+.pp-fv.mono   { font-family: 'Courier Prime', monospace; }
+.pp-fv.authority { font-size: 11px; font-weight: 600; line-height: 1.4; }
+.pp-sig-line { height: 22px; border-bottom: 1px solid; width: 110px; margin-top: 4px; }
+.pp-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-.pp-fv {
-  font-size: 13.5px;
-  font-weight: 700;
-  color: #111;
-  letter-spacing: 0.4px;
-  line-height: 1.25;
-}
-
-.pp-fv.large {
-  font-size: 17px;
-  letter-spacing: 0.5px;
-}
-
-.pp-fv.authority {
-  font-size: 11.5px;
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: 0.3px;
-}
-
-.pp-sig-line {
-  height: 22px;
-  border-bottom: 1px solid;
-  width: 110px;
-  margin-top: 4px;
-}
-
-.pp-row {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 8px;
-}
-
+/* ── Shared: MRZ ── */
 .pp-mrz {
-  position: relative;
-  z-index: 3;
-  border-top: 2px solid;
-  padding: 8px 14px 10px;
-  margin-top: 2px;
+  position: relative; z-index: 3;
+  border-top: 2px solid; padding: 8px 14px 10px; margin-top: 2px;
 }
-
 .pp-mrz-line {
   font-family: 'Courier Prime', 'Courier New', monospace;
-  font-size: 15.5px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: #111;
-  line-height: 1.55;
-  word-break: break-all;
+  font-size: 14.5px; font-weight: 700; letter-spacing: 2px;
+  color: #111; line-height: 1.55; word-break: break-all;
 }
+
+/* ════════════════════════════════════════
+   AUSTRALIA LAYOUT
+════════════════════════════════════════ */
+.pp-au-header {
+  position: relative; z-index: 3;
+  display: flex; align-items: stretch;
+  padding: 8px 14px; border-bottom: 1px solid; gap: 12px;
+}
+.pp-au-titre { display: flex; flex-direction: column; justify-content: center; min-width: 110px; }
+.pp-au-titre-main { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; }
+.pp-au-titre-sub  { font-size: 7.5px; letter-spacing: 0.8px; opacity: 0.7; margin-top: 2px; }
+.pp-au-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+.pp-au-country { font-size: 17px; font-weight: 900; letter-spacing: 6px; }
+.pp-au-docno { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; min-width: 130px; }
+.pp-au-docno-label { font-size: 8px; font-weight: 600; letter-spacing: 1px; }
+.pp-au-docno-val   { font-size: 14px; font-weight: 800; letter-spacing: 1.5px; }
+.pp-au-kangaroo { font-size: 18px; margin-top: 6px; text-align: center; opacity: 0.4; letter-spacing: 4px; }
+.au-sig { width: 130px; }
+
+/* ════════════════════════════════════════
+   INDONESIA LAYOUT
+════════════════════════════════════════ */
+.pp-idn-header {
+  position: relative; z-index: 3;
+  display: flex; align-items: center;
+  padding: 8px 14px; gap: 8px;
+}
+.pp-idn-header-left { display: flex; flex-direction: column; min-width: 120px; }
+.pp-idn-paspor     { font-size: 16px; font-weight: 900; color: #fff; letter-spacing: 2px; }
+.pp-idn-paspor-sub { font-size: 6.5px; color: rgba(255,255,255,0.75); letter-spacing: 0.5px; margin-top: 2px; }
+.pp-idn-header-center { flex: 1; text-align: center; }
+.pp-idn-republic     { font-size: 13px; font-weight: 800; color: #fff; letter-spacing: 2px; }
+.pp-idn-republic-sub { font-size: 6px; color: rgba(255,255,255,0.7); letter-spacing: 0.3px; margin-top: 2px; }
+.pp-idn-header-right { display: flex; align-items: center; justify-content: flex-end; min-width: 60px; }
+.pp-idn-flag { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; display: flex; flex-direction: column; border: 2px solid rgba(255,255,255,0.5); }
+.pp-idn-flag-red   { flex: 1; background: #cc0001; }
+.pp-idn-flag-white { flex: 1; background: #fff; }
+
+.pp-idn-type-bar {
+  position: relative; z-index: 3;
+  display: flex; align-items: center;
+  padding: 5px 14px; border-bottom: 1px solid; gap: 32px;
+  background: rgba(255,255,255,0.5);
+}
+.pp-idn-body { background: transparent; }
+.pp-idn-small-photo-row { display: flex; align-items: flex-start; gap: 8px; }
+.pp-idn-small-photo-row .pp-field { flex: 1; }
+.pp-idn-garuda { margin-top: 6px; display: flex; justify-content: center; opacity: 0.5; }
+.pp-idn-mrz { border-top-width: 2px; }
+
+/* ════════════════════════════════════════
+   GERMANY LAYOUT
+════════════════════════════════════════ */
+.pp-de-body { align-items: flex-start; }
+.pp-idn-body { background: transparent; }
+.pp-de-stripe-top,
+.pp-de-stripe-bottom,
+.pp-de-stripe-mrz {
+  position: relative; z-index: 3;
+  font-size: 6.5px; font-weight: 500; letter-spacing: 0.5px;
+  color: rgba(0,0,0,0.22); padding: 2px 14px;
+  white-space: nowrap; overflow: hidden;
+  background: rgba(0,0,0,0.03);
+}
+.pp-de-header {
+  position: relative; z-index: 3;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 14px; border-bottom: 1px solid; gap: 10px;
+}
+.pp-de-header-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+.pp-de-titles { display: flex; flex-direction: column; }
+.pp-de-title1 { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; }
+.pp-de-title2 { font-size: 7.5px; font-weight: 500; letter-spacing: 0.5px; opacity: 0.7; margin-top: 2px; }
+.pp-de-header-right { text-align: right; flex-shrink: 0; }
+.pp-de-reisepass     { font-size: 15px; font-weight: 900; letter-spacing: 3px; }
+.pp-de-passport-sub  { font-size: 8px; font-weight: 500; letter-spacing: 1px; opacity: 0.65; }
+
+.pp-de-body { align-items: flex-start; }
+.pp-de-info { gap: 4px; }
+.pp-de-field-num { display: flex; align-items: flex-start; gap: 4px; }
+.pp-de-num { font-size: 8px; font-weight: 700; min-width: 16px; padding-top: 2px; flex-shrink: 0; }
+.pp-de-field-group { flex: 1; }
+.pp-de-sub-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pp-de-row3 { display: flex; align-items: flex-start; gap: 6px; }
+.pp-de-row3 .pp-de-field-num { flex: 1; }
+.pp-de-badge {
+  font-size: 38px; font-weight: 900; letter-spacing: -2px;
+  border: 2px solid; border-radius: 4px;
+  width: 52px; height: 52px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; align-self: center;
+}
+.pp-de-row-dates { display: flex; align-items: flex-start; gap: 6px; }
+.pp-de-row-dates .pp-de-field-num { flex: 1; }
+
+/* ════════════════════════════════════════
+   FRANCE LAYOUT
+════════════════════════════════════════ */
+.pp-fr-header {
+  position: relative; z-index: 3;
+  display: flex; align-items: center;
+  padding: 7px 14px; border-bottom: 1px solid; gap: 10px;
+}
+.pp-fr-header-left { display: flex; flex-direction: column; min-width: 80px; }
+.pp-fr-passeport { font-size: 13px; font-weight: 900; letter-spacing: 2px; }
+.pp-fr-passport  { font-size: 9px;  font-weight: 600; letter-spacing: 1.5px; opacity: 0.75; }
+.pp-fr-header-center { flex: 1; text-align: center; }
+.pp-fr-republic { font-size: 12px; font-weight: 800; letter-spacing: 2px; }
+.pp-fr-badge {
+  width: 52px; height: 52px; border: 2px solid;
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+.pp-fr-rf { font-size: 16px; font-weight: 900; letter-spacing: 1px; }
+
+.pp-fr-field-num { display: flex; align-items: flex-start; gap: 4px; }
+.pp-fr-field-num .pp-field { flex: 1; }
+.pp-fr-num { font-size: 9px; font-weight: 700; min-width: 18px; padding-top: 2px; flex-shrink: 0; }
+.pp-fr-row3 { display: flex; gap: 4px; }
+.pp-fr-row3 .pp-fr-field-num { flex: 1; }
+.pp-fr-row-bot { display: flex; gap: 8px; }
+.pp-fr-row-bot .pp-fr-field-num { flex: 1; }
+
+/* ════════════════════════════════════════
+   ALGERIA LAYOUT
+════════════════════════════════════════ */
+.pp-dz-header {
+  position: relative; z-index: 3;
+  display: flex; align-items: center;
+  padding: 8px 14px; border-bottom: 1px solid; gap: 10px;
+}
+.pp-dz-header-left { display: flex; flex-direction: column; min-width: 120px; }
+.pp-dz-passport-label { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.pp-dz-arabic-sub     { font-size: 14px; font-weight: 700; direction: rtl; margin-top: 2px; }
+.pp-dz-header-center  { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pp-dz-header-right   { flex: 1; text-align: right; direction: rtl; }
+.pp-dz-arabic-title   { font-size: 10px; font-weight: 700; direction: rtl; line-height: 1.4; }
+.pp-dz-country        { font-size: 9px;  font-weight: 600; letter-spacing: 1px; direction: ltr; text-align: right; margin-top: 2px; }
+
+.pp-dz-field { display: flex; flex-direction: column; gap: 0px; margin-bottom: 2px; }
+.pp-dz-arabic-val { font-size: 11px; font-weight: 600; direction: rtl; color: #333; line-height: 1.2; }
+.pp-dz-star {
+  position: absolute; bottom: 6px; right: 6px;
+  font-size: 22px; opacity: 0.6;
+}
+.pp-dz-personal-no {
+  margin-top: 6px; border: 1px solid;
+  padding: 3px 5px; border-radius: 2px;
+  background: rgba(0,0,0,0.02);
+}
+.pp-dz-side { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+
+/* ════════════════════════════════════════
+   BRAZIL LAYOUT
+════════════════════════════════════════ */
+.pp-br-header {
+  position: relative; z-index: 3;
+  display: flex; align-items: center;
+  padding: 7px 14px; border-bottom: 1px solid; gap: 10px;
+}
+.pp-br-header-left { display: flex; flex-direction: column; min-width: 90px; }
+.pp-br-passaporte { font-size: 13px; font-weight: 900; letter-spacing: 1.5px; }
+.pp-br-passport   { font-size: 9px;  font-weight: 600; letter-spacing: 1px; opacity: 0.75; }
+.pp-br-header-center { flex: 1; text-align: center; }
+.pp-br-republic { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; }
+.pp-br-header-right { display: flex; align-items: center; justify-content: flex-end; min-width: 60px; }
+
+.pp-br-info { gap: 4px; }
+.pp-br-filiation {
+  border: 1px solid; border-radius: 2px;
+  padding: 4px 6px; margin: 2px 0;
+  background: rgba(0,0,0,0.02);
+}
+.pp-br-filiation .pp-fl { margin-bottom: 2px; }
+.pp-br-watermark-col {
+  position: absolute; right: 14px; top: 60px; bottom: 50px;
+  display: flex; flex-direction: column; justify-content: space-around;
+  font-size: 11px; font-weight: 900; letter-spacing: 3px;
+  writing-mode: vertical-rl; text-orientation: upright;
+  pointer-events: none; z-index: 1; user-select: none;
+  overflow: hidden; width: 18px;
+}
+.pp-body { position: relative; }

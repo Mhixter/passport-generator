@@ -22,7 +22,7 @@ const defaultData = {
   registeredDomicile: 'KANAGAWA/JPN',
   dateOfIssue: '25 MAY 2026',
   dateOfExpiry: '25 MAY 2031',
-  authority: 'MINISTRY OF\nFOREIGN AFFAIRS',
+  authority: 'MINISTRY OF FOREIGN AFFAIRS',
   passportNo: 'SK7788056',
   country: 'JAPAN',
   countryCode: 'JPN',
@@ -30,6 +30,17 @@ const defaultData = {
   photo: null,
   emblem: null,
   cornerEmblem: null,
+  height: '',
+  eyeColor: '',
+  residence: '',
+  nationalIdNo: '',
+  issuingOffice: '',
+  filiation1: '',
+  filiation2: '',
+  personalNo: '',
+  birthName: '',
+  surnameArabic: '',
+  givenNameArabic: '',
 }
 
 function Generator() {
@@ -174,7 +185,7 @@ function Generator() {
       <main className="app-main">
         <div className="layout">
           <aside className="form-panel">
-            <PassportForm data={data} onChange={setData} watermarkImage={watermarkImage} onWatermarkChange={setWatermarkImage} />
+            <PassportForm data={data} onChange={setData} watermarkImage={watermarkImage} onWatermarkChange={setWatermarkImage} template={template} />
           </aside>
 
           <section className="preview-panel">
