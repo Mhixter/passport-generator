@@ -4,10 +4,12 @@ import bcrypt from 'bcryptjs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { existsSync } from 'fs'
+
 import authRoutes from './routes/auth.js'
 import unitsRoutes from './routes/units.js'
 import paymentRoutes from './routes/payment.js'
 import adminRoutes from './routes/admin.js'
+
 import { findUser, createUser, setUserAdmin } from './db.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -54,9 +56,12 @@ app.use('/api/admin', adminRoutes)
 
 if (isProd) {
   const distPath = join(__dirname, '..', 'dist')
+
   if (existsSync(distPath)) {
     app.use(express.static(distPath))
-    app.get('/.*/', (req, res) => {
+
+    // ✅ FIXED: Express 5 safe catch-all route
+    app.get(/.*/, (req, res) => {
       res.sendFile(join(distPath, 'index.html'))
     })
   }
