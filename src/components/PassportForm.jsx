@@ -17,10 +17,11 @@ const FIELDS = [
   { key: 'authority', label: 'Authority', placeholder: 'MINISTRY OF\nFOREIGN AFFAIRS', multiline: true },
 ]
 
-export default function PassportForm({ data, onChange }) {
+export default function PassportForm({ data, onChange, watermarkImage, onWatermarkChange }) {
   const photoRef = useRef()
   const emblemRef = useRef()
   const cornerRef = useRef()
+  const watermarkRef = useRef()
 
   const handleField = (key, value) => {
     onChange({ ...data, [key]: value })
@@ -30,6 +31,13 @@ export default function PassportForm({ data, onChange }) {
     if (!file) return
     const reader = new FileReader()
     reader.onload = (e) => onChange({ ...data, [key]: e.target.result })
+    reader.readAsDataURL(file)
+  }
+
+  const handleWatermarkFile = (file) => {
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (e) => onWatermarkChange(e.target.result)
     reader.readAsDataURL(file)
   }
 
@@ -116,6 +124,33 @@ export default function PassportForm({ data, onChange }) {
         </div>
         <input ref={cornerRef} type="file" accept="image/*" style={{ display: 'none' }}
           onChange={(e) => handleImage('cornerEmblem', e.target.files[0])} />
+      </div>
+
+      <div className="form-group watermark-upload-group">
+        <label>
+          <span className="wm-label-badge">Watermark Image</span>
+          <span className="wm-hint">Shown large &amp; faded across the center</span>
+        </label>
+        <div className="image-upload-row">
+          <div
+            className="image-preview-box wm-box"
+            onClick={() => watermarkRef.current.click()}
+            style={watermarkImage ? { backgroundImage: `url(${watermarkImage})`, backgroundSize: 'contain', backgroundRepeat: 'no-repeat' } : {}}
+          >
+            {!watermarkImage && (
+              <div className="wm-placeholder">
+                <span className="wm-icon">🖼</span>
+                <span>Upload watermark</span>
+                <span className="wm-sub">PNG with transparency works best</span>
+              </div>
+            )}
+          </div>
+          {watermarkImage && (
+            <button className="clear-btn" onClick={() => onWatermarkChange(null)}>✕ Remove</button>
+          )}
+        </div>
+        <input ref={watermarkRef} type="file" accept="image/*" style={{ display: 'none' }}
+          onChange={(e) => handleWatermarkFile(e.target.files[0])} />
       </div>
 
       <div style={{ height: 20 }} />
