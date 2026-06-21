@@ -1,4 +1,5 @@
 import { forwardRef } from 'react'
+import CountryLogo from './CountryLogo.jsx'
 import './PassportCard.css'
 
 function generateMRZ(data, template) {
@@ -35,14 +36,14 @@ const PassportCard = forwardRef(function PassportCard({ data, template, watermar
   const cornerColor = t.cornerColor || accent
   const logoAlign = t.logoAlign || 'split'
 
-  const renderLogo = (side) => {
-    if (data.cornerEmblem) return <img src={data.cornerEmblem} alt="" />
-    return <DefaultCornerEmblem color={cornerColor} />
+  const renderLogo = () => {
+    if (data.cornerEmblem) return <img src={data.cornerEmblem} alt="" style={{ width:'100%', height:'100%', objectFit:'contain' }} />
+    return <CountryLogo countryId={t.id} color={cornerColor} size={46} />
   }
 
   const renderSeal = () => {
     if (data.emblem) return <img src={data.emblem} alt="seal" style={{ width:'100%', height:'100%', objectFit:'contain' }} />
-    return <DefaultEmblem color={t.emblemColor || '#4a7c3f'} />
+    return <CountryLogo countryId={t.id} color={t.emblemColor || t.accentColor || '#4a7c3f'} size={52} />
   }
 
   const sealPos = t.sealPosition || { bottom: true, right: false }
@@ -66,7 +67,7 @@ const PassportCard = forwardRef(function PassportCard({ data, template, watermar
 
       <div className="pp-top-bar" style={{ borderBottomColor: border }}>
         {(logoAlign === 'split' || logoAlign === 'left') && (
-          <div className="pp-logo-box">{renderLogo('left')}</div>
+          <div className="pp-logo-box">{renderLogo()}</div>
         )}
 
         <div className={`pp-top-center ${logoAlign === 'left' ? 'align-left' : logoAlign === 'right' ? 'align-right' : ''}`}>
@@ -80,10 +81,10 @@ const PassportCard = forwardRef(function PassportCard({ data, template, watermar
         </div>
 
         {(logoAlign === 'split' || logoAlign === 'right') && (
-          <div className="pp-logo-box">{renderLogo('right')}</div>
+          <div className="pp-logo-box">{renderLogo()}</div>
         )}
         {logoAlign === 'center' && (
-          <div className="pp-logo-box pp-logo-center">{renderLogo('center')}</div>
+          <div className="pp-logo-box pp-logo-center">{renderLogo()}</div>
         )}
       </div>
 
@@ -156,43 +157,6 @@ function Field({ label, value, large, ac }) {
       <div className="pp-fl" style={{ color: ac || '#666' }}>{label}</div>
       <div className={`pp-fv${large ? ' large' : ''}`}>{value || '—'}</div>
     </div>
-  )
-}
-
-function DefaultCornerEmblem({ color = '#b8860b' }) {
-  return (
-    <svg viewBox="0 0 60 60" width="46" height="46" fill="none">
-      <circle cx="30" cy="30" r="27" fill="none" stroke={color} strokeWidth="2" />
-      <circle cx="30" cy="30" r="20" fill="none" stroke={color} strokeWidth="1.2" />
-      {[0,45,90,135,180,225,270,315].map((a,i) => (
-        <line key={i}
-          x1={30+20*Math.cos(a*Math.PI/180)} y1={30+20*Math.sin(a*Math.PI/180)}
-          x2={30+27*Math.cos(a*Math.PI/180)} y2={30+27*Math.sin(a*Math.PI/180)}
-          stroke={color} strokeWidth="1.5"
-        />
-      ))}
-      <circle cx="30" cy="30" r="9" fill={color} opacity="0.2" />
-      <circle cx="30" cy="30" r="4" fill={color} opacity="0.5" />
-    </svg>
-  )
-}
-
-function DefaultEmblem({ color = '#4a7c3f' }) {
-  return (
-    <svg viewBox="0 0 80 80" width="52" height="52">
-      <circle cx="40" cy="40" r="36" fill="none" stroke={color} strokeWidth="2.5" />
-      <circle cx="40" cy="40" r="28" fill={color} opacity="0.08" />
-      <circle cx="40" cy="40" r="18" fill={color} opacity="0.12" />
-      {[0,72,144,216,288].map((a,i) => (
-        <ellipse key={i}
-          cx={40+14*Math.cos(a*Math.PI/180)} cy={40+14*Math.sin(a*Math.PI/180)}
-          rx="5" ry="9" fill={color} opacity="0.5"
-          transform={`rotate(${a},${40+14*Math.cos(a*Math.PI/180)},${40+14*Math.sin(a*Math.PI/180)})`}
-        />
-      ))}
-      <circle cx="40" cy="40" r="7" fill={color} opacity="0.75" />
-      <circle cx="40" cy="40" r="3" fill="white" opacity="0.4" />
-    </svg>
   )
 }
 

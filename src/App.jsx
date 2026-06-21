@@ -6,6 +6,7 @@ import BuyUnitsModal from './components/BuyUnitsModal.jsx'
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
 import Admin from './pages/Admin.jsx'
+import AdminLogin from './pages/AdminLogin.jsx'
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx'
 import { TEMPLATES, randomPassportNo } from './templates.js'
 import './App.css'
@@ -150,9 +151,6 @@ function Generator() {
               <span className="unit-label">units</span>
               <span className="unit-plus">+</span>
             </div>
-            {user?.is_admin && (
-              <button className="admin-link-btn" onClick={() => navigate('/admin')}>⚙ Admin</button>
-            )}
             <span className="header-email">{user?.email}</span>
             <button className="logout-btn" onClick={logout}>Logout</button>
           </div>
@@ -233,6 +231,7 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
           <Route path="/" element={<ProtectedRoute><Generator /></ProtectedRoute>} />
         </Routes>

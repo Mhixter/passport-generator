@@ -4,7 +4,7 @@
       "id": "u_1782002442174_ygapvyufec",
       "email": "omolikisegun52@gmail.com",
       "password": "$2b$10$YvXURdnUh.u56lz8jWaF3erOTaPSYkY/WvKrJdYU09eGKbrvjy5ku",
-      "units": 1,
+      "units": 0,
       "is_admin": true,
       "created_at": "2026-06-21T00:40:42.174Z"
     },
@@ -15,8 +15,25 @@
       "units": 1,
       "is_admin": false,
       "created_at": "2026-06-21T00:42:17.981Z"
+    },
+    {
+      "id": "u_admin_1782003028097",
+      "email": "saidumuhammed664@gmail.com",
+      "password": "$2b$10$9gGHwBaOFeOvqQFqbPLPCe4IyLCjXn0Kb9gyeEf2DMn16xkw9uecS",
+      "units": 0,
+      "is_admin": true,
+      "created_at": "2026-06-21T00:50:28.097Z"
     }
   ],
   "transactions": [],
-  "downloads": []
+  "downloads": [
+    {
+      "id": "dl_1782002849725_e8y59w1y0c",
+      "user_id": "u_1782002442174_ygapvyufec",
+      "email": "omolikisegun52@gmail.com",
+      "units_spent": 1,
+      "type": "single",
+      "created_at": "2026-06-21T00:47:29.725Z"
+    }
+  ]
 }
