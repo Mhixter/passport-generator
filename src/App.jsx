@@ -1,6 +1,12 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import PassportForm from './components/PassportForm.jsx'
 import PassportCard from './components/PassportCard.jsx'
+import BuyUnitsModal from './components/BuyUnitsModal.jsx'
+import Login from './pages/Login.jsx'
+import Signup from './pages/Signup.jsx'
+import Admin from './pages/Admin.jsx'
+import { AuthProvider, useAuth } from './contexts/AuthContext.jsx'
 import { TEMPLATES, randomPassportNo } from './templates.js'
 import './App.css'
 
@@ -25,79 +31,122 @@ const defaultData = {
   cornerEmblem: null,
 }
 
-export default function App() {
+function Generator() {
+  const { user, logout, spendUnits, refreshUser } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
   const [data, setData] = useState(defaultData)
   const [templateId, setTemplateId] = useState('japan')
   const [watermarkImage, setWatermarkImage] = useState(null)
   const [bulkLoading, setBulkLoading] = useState(false)
   const [bulkProgress, setBulkProgress] = useState(0)
+  const [showBuyModal, setShowBuyModal] = useState(false)
+  const [toast, setToast] = useState(null)
   const passportRef = useRef(null)
-
   const template = TEMPLATES[templateId]
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    if (params.get('payment') === 'success') {
+      refreshUser()
+      showToast('✅ Payment successful! Units added to your account.', 'success')
+      navigate('/', { replace: true })
+    } else if (params.get('payment') === 'failed') {
+      showToast('❌ Payment failed or cancelled.', 'error')
+      navigate('/', { replace: true })
+    }
+  }, [location.search])
+
+  const showToast = (msg, type = 'info') => {
+    setToast({ msg, type })
+    setTimeout(() => setToast(null), 4000)
+  }
+
   const getHtml2Canvas = useCallback(async () => {
-    const { default: html2canvas } = await import('html2canvas')
-    return html2canvas
+    const { default: h2c } = await import('html2canvas')
+    return h2c
   }, [])
 
   const handleDownload = async () => {
-    const html2canvas = await getHtml2Canvas()
-    const canvas = await html2canvas(passportRef.current, {
-      scale: 3,
-      useCORS: true,
-      backgroundColor: null,
-    })
-    const link = document.createElement('a')
-    link.download = `passport_${data.surname}_${data.passportNo}.png`
-    link.href = canvas.toDataURL('image/png')
-    link.click()
+    if (user.units < 1) { setShowBuyModal(true); return }
+    try {
+      await spendUnits(1, 'single')
+      const html2canvas = await getHtml2Canvas()
+      const canvas = await html2canvas(passportRef.current, { scale: 3, useCORS: true, backgroundColor: null })
+      const link = document.createElement('a')
+      link.download = `passport_${data.surname}_${data.passportNo}.png`
+      link.href = canvas.toDataURL('image/png')
+      link.click()
+      showToast('✅ Passport downloaded!', 'success')
+    } catch (err) {
+      showToast(err.message || 'Download failed', 'error')
+      if (err.message?.includes('Insufficient')) setShowBuyModal(true)
+    }
   }
 
   const handleBulkDownload = async () => {
-    setBulkLoading(true)
-    setBulkProgress(0)
-    const html2canvas = await getHtml2Canvas()
-
-    for (let i = 0; i < 10; i++) {
-      const pNo = randomPassportNo()
-      setData(prev => ({ ...prev, passportNo: pNo }))
-      await new Promise(r => setTimeout(r, 300))
-
-      const canvas = await html2canvas(passportRef.current, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: null,
-      })
-      const link = document.createElement('a')
-      link.download = `passport_${data.surname}_${pNo}.png`
-      link.href = canvas.toDataURL('image/png')
-      link.click()
-      setBulkProgress(i + 1)
-      await new Promise(r => setTimeout(r, 200))
+    if (user.units < 10) { setShowBuyModal(true); return }
+    try {
+      await spendUnits(10, 'bulk-10')
+      setBulkLoading(true)
+      setBulkProgress(0)
+      const html2canvas = await getHtml2Canvas()
+      for (let i = 0; i < 10; i++) {
+        const pNo = randomPassportNo()
+        setData(prev => ({ ...prev, passportNo: pNo }))
+        await new Promise(r => setTimeout(r, 300))
+        const canvas = await html2canvas(passportRef.current, { scale: 2, useCORS: true, backgroundColor: null })
+        const link = document.createElement('a')
+        link.download = `passport_${data.surname}_${pNo}.png`
+        link.href = canvas.toDataURL('image/png')
+        link.click()
+        setBulkProgress(i + 1)
+        await new Promise(r => setTimeout(r, 200))
+      }
+      setBulkLoading(false)
+      showToast('✅ 10 passports downloaded!', 'success')
+    } catch (err) {
+      setBulkLoading(false)
+      showToast(err.message || 'Bulk download failed', 'error')
+      if (err.message?.includes('Insufficient')) setShowBuyModal(true)
     }
-    setBulkLoading(false)
   }
 
   const handleTemplateChange = (id) => {
     const t = TEMPLATES[id]
     if (!t) return
     setTemplateId(id)
-    setData(prev => ({
-      ...prev,
-      country: t.countryName,
-      countryCode: t.countryCode,
-      type: t.type || 'P',
-    }))
+    setData(prev => ({ ...prev, country: t.countryName, countryCode: t.countryCode, type: t.type || 'P' }))
   }
 
   return (
     <div className="app">
+      {toast && (
+        <div className={`toast toast-${toast.type}`}>{toast.msg}</div>
+      )}
+
+      {showBuyModal && <BuyUnitsModal onClose={() => setShowBuyModal(false)} />}
+
       <header className="app-header">
         <div className="header-content">
-          <div className="header-icon">🛂</div>
-          <div>
-            <h1>Passport Generator</h1>
-            <p>Create a custom passport card with 10 country templates</p>
+          <div className="header-left">
+            <div className="header-icon">🛂</div>
+            <div>
+              <h1>Passport Generator</h1>
+              <p>10 country templates</p>
+            </div>
+          </div>
+          <div className="header-right">
+            <div className="unit-badge" onClick={() => setShowBuyModal(true)} title="Buy more units">
+              <span className="unit-count">{user?.units ?? 0}</span>
+              <span className="unit-label">units</span>
+              <span className="unit-plus">+</span>
+            </div>
+            {user?.is_admin && (
+              <button className="admin-link-btn" onClick={() => navigate('/admin')}>⚙ Admin</button>
+            )}
+            <span className="header-email">{user?.email}</span>
+            <button className="logout-btn" onClick={logout}>Logout</button>
           </div>
         </div>
       </header>
@@ -127,16 +176,13 @@ export default function App() {
               <h2>Live Preview — <span style={{ color: template?.accentColor }}>{template?.flag} {template?.name}</span></h2>
               <div className="action-btns">
                 <button className="download-btn" onClick={handleDownload}>
-                  ⬇ Download PNG
+                  ⬇ Download <span className="cost-badge">1 unit</span>
                 </button>
-                <button
-                  className="bulk-btn"
-                  onClick={handleBulkDownload}
-                  disabled={bulkLoading}
-                >
-                  {bulkLoading
-                    ? `Generating ${bulkProgress}/10...`
-                    : '🔀 Download 10 (Random Numbers)'}
+                <button className="bulk-btn" onClick={handleBulkDownload} disabled={bulkLoading}>
+                  {bulkLoading ? `Generating ${bulkProgress}/10…` : <span>🔀 Download 10 <span className="cost-badge">10 units</span></span>}
+                </button>
+                <button className="buy-units-btn" onClick={() => setShowBuyModal(true)}>
+                  💳 Buy Units
                 </button>
               </div>
             </div>
@@ -149,16 +195,40 @@ export default function App() {
             )}
 
             <div className="preview-wrapper">
-              <PassportCard
-                ref={passportRef}
-                data={data}
-                template={template}
-                watermarkImage={watermarkImage}
-              />
+              <PassportCard ref={passportRef} data={data} template={template} watermarkImage={watermarkImage} />
             </div>
           </section>
         </div>
       </main>
     </div>
+  )
+}
+
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return <div className="app-loading">Loading…</div>
+  if (!user) return <Navigate to="/signup" replace />
+  return children
+}
+
+function AdminRoute({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return <div className="app-loading">Loading…</div>
+  if (!user?.is_admin) return <Navigate to="/" replace />
+  return children
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
+          <Route path="/" element={<ProtectedRoute><Generator /></ProtectedRoute>} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }

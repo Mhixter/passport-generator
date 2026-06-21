@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "id": "u_1782002442174_ygapvyufec",
+      "email": "omolikisegun52@gmail.com",
+      "password": "$2b$10$YvXURdnUh.u56lz8jWaF3erOTaPSYkY/WvKrJdYU09eGKbrvjy5ku",
+      "units": 1,
+      "is_admin": true,
+      "created_at": "2026-06-21T00:40:42.174Z"
+    },
+    {
+      "id": "u_1782002537981_fm9c6naslv",
+      "email": "test@example.com",
+      "password": "$2b$10$.WZF4QBxG6zs8.HpB4bU2OuZ9yzHwSjYLkAeC4/qEFq8MgWjGgEJ6",
+      "units": 1,
+      "is_admin": false,
+      "created_at": "2026-06-21T00:42:17.981Z"
+    }
+  ],
+  "transactions": [],
+  "downloads": []
+}
