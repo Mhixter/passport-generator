@@ -41,6 +41,7 @@ const defaultData = {
   birthName: '',
   surnameArabic: '',
   givenNameArabic: '',
+  signature: null,
 }
 
 function Generator() {

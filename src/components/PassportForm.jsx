@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import SignaturePad from './SignaturePad.jsx'
 import './PassportForm.css'
 
 const BASE_FIELDS = [
@@ -103,6 +104,15 @@ export default function PassportForm({ data, onChange, watermarkImage, onWaterma
           {extraFields.map(renderField)}
         </>
       )}
+
+      <div className="form-section-title" style={{ marginTop: 20 }}>Signature</div>
+      <div className="form-group">
+        <label>Draw your signature</label>
+        <SignaturePad
+          value={data.signature}
+          onChange={(sig) => onChange({ ...data, signature: sig })}
+        />
+      </div>
 
       <div className="form-section-title" style={{ marginTop: 20 }}>Images</div>
 

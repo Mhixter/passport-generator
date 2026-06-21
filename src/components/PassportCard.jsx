@@ -33,18 +33,23 @@ function formatGermanDate(dateStr) {
   return dateStr
 }
 
-function Field({ label, value, large, ac, mono }) {
+function Field({ label, value, large, ac }) {
   return (
     <div className="pp-field">
       <div className="pp-fl" style={{ color: ac || '#666' }}>{label}</div>
-      <div className={`pp-fv${large ? ' large' : ''}${mono ? ' mono' : ''}`}>{value || '—'}</div>
+      <div className={`pp-fv${large ? ' large' : ''}`}>{value || '—'}</div>
     </div>
   )
 }
 
-function PhotoBox({ photo, border, width = 148, height = 186, className = '' }) {
+function PhotoBox({ photo, photoStyle = {}, width = 148, height = 186, className = '' }) {
+  const boxBorder = photoStyle.shaded ? 'none' : (photoStyle.border || '1px solid rgba(0,0,0,0.2)')
+  const boxBg = photo ? 'transparent' : (photoStyle.bg || 'rgba(0,0,0,0.06)')
+  const boxRadius = photoStyle.radius || '2px'
+  const boxShadow = photoStyle.shaded ? 'inset 0 0 0 1px rgba(0,0,0,0.08)' : 'none'
   return (
-    <div className={`pp-photo-box ${className}`} style={{ width, height, borderColor: border }}>
+    <div className={`pp-photo-box ${className}`}
+      style={{ width, height, border: boxBorder, background: boxBg, borderRadius: boxRadius, boxShadow }}>
       {photo
         ? <img src={photo} alt="photo" className="pp-photo-img" />
         : <div className="pp-photo-ph"><span>Photo</span></div>}
@@ -52,9 +57,9 @@ function PhotoBox({ photo, border, width = 148, height = 186, className = '' }) 
   )
 }
 
-function SmallPhotoBox({ photo, border }) {
+function SmallPhotoBox({ photo, border, radius = '2px' }) {
   return (
-    <div className="pp-photo-small" style={{ borderColor: border }}>
+    <div className="pp-photo-small" style={{ borderColor: border, borderRadius: radius }}>
       {photo
         ? <img src={photo} alt="photo" className="pp-photo-img" />
         : <div className="pp-photo-ph small"><span>Photo</span></div>}
@@ -72,6 +77,17 @@ function Seal({ t, data, size = 52 }) {
   return <CountryLogo countryId={t.id} color={t.emblemColor || t.accentColor} size={size} />
 }
 
+function SigDisplay({ data, accent, width = 110 }) {
+  if (data.signature) {
+    return (
+      <div className="pp-sig-img-wrap">
+        <img src={data.signature} alt="signature" className="pp-sig-img" />
+      </div>
+    )
+  }
+  return <div className="pp-sig-line" style={{ borderBottomColor: accent, width }} />
+}
+
 function MRZSection({ mrz, mrzBg, mrzBdr, mrzColor }) {
   return (
     <div className="pp-mrz" style={{ background: mrzBg, borderTopColor: mrzBdr }}>
@@ -87,6 +103,7 @@ function DefaultLayout({ data, t, mrz }) {
   const border = t.borderColor || 'rgba(180,150,80,0.35)'
   const logoAlign = t.logoAlign || 'split'
   const sealPos = t.sealPosition || { bottom: true, right: false }
+  const ps = t.photoStyle || {}
 
   return (
     <>
@@ -125,7 +142,7 @@ function DefaultLayout({ data, t, mrz }) {
 
       <div className="pp-body">
         <div className="pp-photo-col">
-          <PhotoBox photo={data.photo} border={border} />
+          <PhotoBox photo={data.photo} photoStyle={ps} />
           <div className={`pp-seal-wrap ${sealPos.bottom ? 'seal-bottom' : 'seal-top'} ${sealPos.right ? 'seal-right' : ''}`}>
             <div className="pp-seal-box"><Seal t={t} data={data} /></div>
           </div>
@@ -145,7 +162,7 @@ function DefaultLayout({ data, t, mrz }) {
             <Field label={t.issueLabel || 'Date of issue'} value={data.dateOfIssue} ac={accent} />
             <div className="pp-field">
               <div className="pp-fl" style={{ color: accent }}>{t.signatureLabel || 'Signature'}</div>
-              <div className="pp-sig-line" style={{ borderBottomColor: accent }} />
+              <SigDisplay data={data} accent={accent} />
             </div>
           </div>
           <Field label={t.expiryLabel || 'Date of expiry'} value={data.dateOfExpiry} ac={accent} />
@@ -164,6 +181,7 @@ function DefaultLayout({ data, t, mrz }) {
 function AustraliaLayout({ data, t, mrz }) {
   const accent = t.accentColor || '#006b7b'
   const border = t.borderColor || 'rgba(0,107,123,0.3)'
+  const ps = t.photoStyle || {}
 
   return (
     <>
@@ -179,7 +197,7 @@ function AustraliaLayout({ data, t, mrz }) {
         <div className="pp-au-docno" style={{ color: accent }}>
           <div className="pp-au-docno-label">DOCUMENT No.</div>
           <div className="pp-au-docno-val">{data.passportNo || 'AB1234567'}</div>
-          <SmallPhotoBox photo={data.photo} border={border} />
+          <SmallPhotoBox photo={data.photo} border={accent} radius="2px" />
         </div>
       </div>
 
@@ -196,7 +214,7 @@ function AustraliaLayout({ data, t, mrz }) {
 
       <div className="pp-body">
         <div className="pp-photo-col">
-          <PhotoBox photo={data.photo} border={border} height={200} />
+          <PhotoBox photo={data.photo} photoStyle={ps} height={200} />
           <div className="pp-au-kangaroo">🦘🦘</div>
         </div>
         <div className="pp-info-col">
@@ -214,7 +232,7 @@ function AustraliaLayout({ data, t, mrz }) {
           <Field label="Authority / Autorité" value={data.authority} ac={accent} />
           <div className="pp-field">
             <div className="pp-fl" style={{ color: accent }}>Holder's signature / Signature du titulaire</div>
-            <div className="pp-sig-line au-sig" style={{ borderBottomColor: accent }} />
+            <SigDisplay data={data} accent={accent} width={140} />
           </div>
         </div>
       </div>
@@ -228,6 +246,7 @@ function IndonesiaLayout({ data, t, mrz }) {
   const blue = '#1a3a6e'
   const red = '#cc0001'
   const border = 'rgba(204,0,1,0.25)'
+  const ps = t.photoStyle || {}
 
   return (
     <>
@@ -265,7 +284,7 @@ function IndonesiaLayout({ data, t, mrz }) {
 
       <div className="pp-body pp-idn-body">
         <div className="pp-photo-col">
-          <PhotoBox photo={data.photo} border={border} height={210} />
+          <PhotoBox photo={data.photo} photoStyle={ps} height={210} />
           <div className="pp-idn-garuda"><Seal t={t} data={data} size={48} /></div>
         </div>
         <div className="pp-info-col">
@@ -290,7 +309,7 @@ function IndonesiaLayout({ data, t, mrz }) {
             <Field label="Tgl. terbit · Date of issue" value={data.dateOfIssue} ac={red} />
             <div className="pp-field">
               <div className="pp-fl" style={{ color: red }}>Tanda tangan · Holder's signature</div>
-              <div className="pp-sig-line" style={{ borderBottomColor: red }} />
+              <SigDisplay data={data} accent={red} />
             </div>
           </div>
           <Field label="Tgl. habis berlaku · Date of expiry" value={data.dateOfExpiry} ac={red} />
@@ -310,6 +329,7 @@ function GermanyLayout({ data, t, mrz }) {
   const red = '#dd0000'
   const gray = '#444'
   const border = 'rgba(0,0,0,0.15)'
+  const ps = t.photoStyle || {}
 
   return (
     <>
@@ -348,7 +368,7 @@ function GermanyLayout({ data, t, mrz }) {
 
       <div className="pp-body pp-de-body">
         <div className="pp-photo-col">
-          <PhotoBox photo={data.photo} border={border} height={220} />
+          <PhotoBox photo={data.photo} photoStyle={ps} height={220} />
         </div>
         <div className="pp-info-col pp-de-info">
           <div className="pp-de-field-num">
@@ -427,7 +447,7 @@ function GermanyLayout({ data, t, mrz }) {
               <span className="pp-de-num" style={{ color: gray }}>10.</span>
               <div>
                 <div className="pp-fl" style={{ color: gray }}>Unterschrift des Inhabers / Signature</div>
-                <div className="pp-sig-line" style={{ borderBottomColor: black, width: '80px' }} />
+                <SigDisplay data={data} accent={black} width={80} />
               </div>
             </div>
           </div>
@@ -455,8 +475,8 @@ function GermanyLayout({ data, t, mrz }) {
 
 function FranceLayout({ data, t, mrz }) {
   const blue = '#002395'
-  const red = '#ed2939'
   const border = 'rgba(0,35,149,0.25)'
+  const ps = t.photoStyle || {}
 
   return (
     <>
@@ -490,7 +510,7 @@ function FranceLayout({ data, t, mrz }) {
 
       <div className="pp-body">
         <div className="pp-photo-col">
-          <PhotoBox photo={data.photo} border={border} height={210} />
+          <PhotoBox photo={data.photo} photoStyle={ps} height={210} />
           <div className="pp-seal-wrap seal-bottom">
             <div className="pp-seal-box"><Seal t={t} data={data} size={44} /></div>
           </div>
@@ -550,7 +570,7 @@ function FranceLayout({ data, t, mrz }) {
           </div>
           <div className="pp-field" style={{ marginTop: 2 }}>
             <div className="pp-fl" style={{ color: blue }}>Signature du titulaire / Signature of bearer</div>
-            <div className="pp-sig-line" style={{ borderBottomColor: blue }} />
+            <SigDisplay data={data} accent={blue} />
           </div>
         </div>
       </div>
@@ -564,6 +584,7 @@ function AlgeriaLayout({ data, t, mrz }) {
   const green = '#006233'
   const red = '#c8102e'
   const border = 'rgba(0,98,51,0.3)'
+  const ps = t.photoStyle || {}
 
   return (
     <>
@@ -601,7 +622,7 @@ function AlgeriaLayout({ data, t, mrz }) {
       <div className="pp-body">
         <div className="pp-photo-col">
           <div style={{ position: 'relative' }}>
-            <PhotoBox photo={data.photo} border={border} height={200} />
+            <PhotoBox photo={data.photo} photoStyle={ps} height={200} />
             <div className="pp-dz-star" style={{ color: red }}>★</div>
           </div>
           <div className="pp-dz-personal-no" style={{ borderColor: border }}>
@@ -629,9 +650,7 @@ function AlgeriaLayout({ data, t, mrz }) {
           </div>
           <div className="pp-row">
             <Field label="مولود في / Date de naissance / Date of birth" value={data.dateOfBirth} ac={green} />
-            <div>
-              <Field label="مصدر / Date de délivrance / Date of issue" value={data.dateOfIssue} ac={green} />
-            </div>
+            <Field label="مصدر / Date de délivrance / Date of issue" value={data.dateOfIssue} ac={green} />
           </div>
           <div className="pp-row">
             <Field label="مكان الميلاد / Lieu de naissance / Place of birth" value={data.registeredDomicile} ac={green} />
@@ -640,7 +659,7 @@ function AlgeriaLayout({ data, t, mrz }) {
           <div className="pp-row">
             <div className="pp-field">
               <div className="pp-fl" style={{ color: green }}>الإمضاء / Signature</div>
-              <div className="pp-sig-line" style={{ borderBottomColor: green, width: 100 }} />
+              <SigDisplay data={data} accent={green} width={100} />
             </div>
             <Field label="السلطة / Autorité / Authority" value={data.authority} ac={green} />
           </div>
@@ -656,6 +675,7 @@ function BrazilLayout({ data, t, mrz }) {
   const blue = '#002776'
   const green = '#009c3b'
   const border = 'rgba(0,156,59,0.28)'
+  const ps = t.photoStyle || {}
 
   return (
     <>
@@ -689,7 +709,7 @@ function BrazilLayout({ data, t, mrz }) {
 
       <div className="pp-body">
         <div className="pp-photo-col">
-          <PhotoBox photo={data.photo} border={border} height={200} />
+          <PhotoBox photo={data.photo} photoStyle={ps} height={200} />
           <div className="pp-seal-wrap seal-bottom">
             <div className="pp-seal-box"><Seal t={t} data={data} size={46} /></div>
           </div>
@@ -700,9 +720,7 @@ function BrazilLayout({ data, t, mrz }) {
           <Field label="Nacionalidade / Nationality" value={data.nationality || 'BRASILEIRO(A)'} ac={green} />
           <div className="pp-row">
             <Field label="Data de Nascimento / Date of birth" value={data.dateOfBirth} ac={green} />
-            <div>
-              <Field label="Identidade N° / Personal No." value={data.personalNo || '—'} ac={green} />
-            </div>
+            <Field label="Identidade N° / Personal No." value={data.personalNo || '—'} ac={green} />
           </div>
           <div className="pp-row">
             <Field label="Sexo / Sex" value={data.sex} ac={green} />
@@ -721,7 +739,7 @@ function BrazilLayout({ data, t, mrz }) {
             <Field label="Autoridade / Authority" value={data.authority} ac={green} />
             <div className="pp-field">
               <div className="pp-fl" style={{ color: green }}>Assinatura / Signature</div>
-              <div className="pp-sig-line" style={{ borderBottomColor: green }} />
+              <SigDisplay data={data} accent={green} />
             </div>
           </div>
         </div>
@@ -760,13 +778,13 @@ const PassportCard = forwardRef(function PassportCard({ data, template, watermar
         </div>
       )}
 
-      {layout === 'default'    && <DefaultLayout   {...layoutProps} />}
-      {layout === 'australia'  && <AustraliaLayout {...layoutProps} />}
-      {layout === 'indonesia'  && <IndonesiaLayout {...layoutProps} />}
-      {layout === 'germany'    && <GermanyLayout   {...layoutProps} />}
-      {layout === 'france'     && <FranceLayout    {...layoutProps} />}
-      {layout === 'algeria'    && <AlgeriaLayout   {...layoutProps} />}
-      {layout === 'brazil'     && <BrazilLayout    {...layoutProps} />}
+      {layout === 'default'   && <DefaultLayout   {...layoutProps} />}
+      {layout === 'australia' && <AustraliaLayout {...layoutProps} />}
+      {layout === 'indonesia' && <IndonesiaLayout {...layoutProps} />}
+      {layout === 'germany'   && <GermanyLayout   {...layoutProps} />}
+      {layout === 'france'    && <FranceLayout    {...layoutProps} />}
+      {layout === 'algeria'   && <AlgeriaLayout   {...layoutProps} />}
+      {layout === 'brazil'    && <BrazilLayout    {...layoutProps} />}
     </div>
   )
 })
