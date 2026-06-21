@@ -43,16 +43,20 @@ function Field({ label, value, large, ac }) {
 }
 
 function PhotoBox({ photo, photoStyle = {}, width = 148, height = 186, className = '' }) {
-  const boxBorder = photoStyle.shaded ? 'none' : (photoStyle.border || '1px solid rgba(0,0,0,0.2)')
-  const boxBg = photo ? 'transparent' : (photoStyle.bg || 'rgba(0,0,0,0.06)')
-  const boxRadius = photoStyle.radius || '2px'
-  const boxShadow = photoStyle.shaded ? 'inset 0 0 0 1px rgba(0,0,0,0.08)' : 'none'
+  const radius = photoStyle.radius || '2px'
   return (
-    <div className={`pp-photo-box ${className}`}
-      style={{ width, height, border: boxBorder, background: boxBg, borderRadius: boxRadius, boxShadow }}>
-      {photo
-        ? <img src={photo} alt="photo" className="pp-photo-img" />
-        : <div className="pp-photo-ph"><span>Photo</span></div>}
+    <div className={`pp-photo-box ${className}`} style={{ width, height, borderRadius: radius }}>
+      {photo ? (
+        <img src={photo} alt="photo" className="pp-photo-img" style={{ borderRadius: radius }} />
+      ) : (
+        <div className="pp-photo-ph" style={{
+          background: photoStyle.bg || 'rgba(160,150,140,0.15)',
+          borderRadius: radius,
+          border: '1px dashed rgba(0,0,0,0.13)',
+        }}>
+          <span>Photo</span>
+        </div>
+      )}
     </div>
   )
 }
