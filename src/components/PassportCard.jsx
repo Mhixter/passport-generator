@@ -757,6 +757,142 @@ function BrazilLayout({ data, t, mrz }) {
   )
 }
 
+function USALayout({ data, t, mrz }) {
+  const navy = '#002868'
+  const red = '#b22234'
+  const border = 'rgba(0,40,104,0.22)'
+  const ps = t.photoStyle || {}
+
+  return (
+    <>
+      <div className="pp-usa-header" style={{ borderBottomColor: border }}>
+        <div className="pp-usa-logo-left">
+          <Logo t={t} data={data} size={52} color={navy} />
+        </div>
+        <div className="pp-usa-title-block">
+          <div className="pp-usa-country" style={{ color: navy }}>United States of America</div>
+          <div className="pp-usa-doc-type" style={{ color: navy }}>PASSPORT · PASSEPORT · PASAPORTE</div>
+        </div>
+        <div className="pp-usa-stars" style={{ color: red }}>★ ★ ★</div>
+      </div>
+
+      <div className="pp-id-bar" style={{ borderBottomColor: border }}>
+        <div className="pp-id-col">
+          <div className="pp-id-label" style={{ color: navy }}>Type</div>
+          <div className="pp-id-val" style={{ color: '#111' }}>{data.type || 'P'}</div>
+        </div>
+        <div className="pp-id-col">
+          <div className="pp-id-label" style={{ color: navy }}>Country code</div>
+          <div className="pp-id-val" style={{ color: '#111' }}>USA</div>
+        </div>
+        <div className="pp-id-col" style={{ marginLeft: 'auto' }}>
+          <div className="pp-id-label" style={{ color: navy }}>Passport No.</div>
+          <div className="pp-id-val large" style={{ color: '#111' }}>{data.passportNo || 'AB1234567'}</div>
+        </div>
+      </div>
+
+      <div className="pp-body">
+        <div className="pp-photo-col">
+          <PhotoBox photo={data.photo} photoStyle={ps} width={155} height={188} />
+          <div className="pp-seal-wrap seal-bottom">
+            <div className="pp-seal-box"><Seal t={t} data={data} size={50} /></div>
+          </div>
+        </div>
+        <div className="pp-info-col">
+          <Field label="Surname" value={data.surname} large ac={navy} />
+          <Field label="Given Names" value={data.givenName} large ac={navy} />
+          <Field label="Nationality" value={data.nationality || 'UNITED STATES OF AMERICA'} ac={navy} />
+          <div className="pp-row">
+            <Field label="Date of birth" value={data.dateOfBirth} ac={navy} />
+            <Field label="Sex" value={data.sex} ac={navy} />
+          </div>
+          <Field label="Place of birth" value={data.registeredDomicile} ac={navy} />
+          <div className="pp-row">
+            <Field label="Date of issue" value={data.dateOfIssue} ac={navy} />
+            <Field label="Date of expiry" value={data.dateOfExpiry} ac={navy} />
+          </div>
+          <Field label="Issuing authority" value={data.authority} ac={navy} />
+          <div className="pp-field">
+            <div className="pp-fl" style={{ color: navy }}>Signature of bearer / Signature du titulaire</div>
+            <SigDisplay data={data} accent={navy} />
+          </div>
+        </div>
+      </div>
+
+      <MRZSection mrz={mrz} mrzBg={t.mrzBg} mrzBdr={t.mrzBorder} />
+    </>
+  )
+}
+
+function UKLayout({ data, t, mrz }) {
+  const navy = '#012169'
+  const border = 'rgba(1,33,105,0.22)'
+  const ps = t.photoStyle || {}
+
+  return (
+    <>
+      <div className="pp-uk-header" style={{ borderBottomColor: border }}>
+        <div className="pp-uk-title-block">
+          <div className="pp-uk-country" style={{ color: navy }}>United Kingdom</div>
+          <div className="pp-uk-country-sub" style={{ color: navy }}>of Great Britain and Northern Ireland</div>
+        </div>
+        <div className="pp-uk-logo">
+          <Logo t={t} data={data} size={50} color={navy} />
+        </div>
+        <div className="pp-uk-right">
+          <div className="pp-uk-pass-word" style={{ color: navy }}>PASSPORT</div>
+          <div className="pp-uk-pass-sub"  style={{ color: navy }}>PASSEPORT</div>
+        </div>
+      </div>
+
+      <div className="pp-id-bar" style={{ borderBottomColor: border }}>
+        <div className="pp-id-col">
+          <div className="pp-id-label" style={{ color: navy }}>Type</div>
+          <div className="pp-id-val" style={{ color: '#111' }}>{data.type || 'P'}</div>
+        </div>
+        <div className="pp-id-col">
+          <div className="pp-id-label" style={{ color: navy }}>Country code</div>
+          <div className="pp-id-val" style={{ color: '#111' }}>GBR</div>
+        </div>
+        <div className="pp-id-col" style={{ marginLeft: 'auto' }}>
+          <div className="pp-id-label" style={{ color: navy }}>Passport No.</div>
+          <div className="pp-id-val large" style={{ color: '#111' }}>{data.passportNo || 'AB1234567'}</div>
+        </div>
+      </div>
+
+      <div className="pp-body">
+        <div className="pp-photo-col">
+          <PhotoBox photo={data.photo} photoStyle={ps} width={150} height={185} />
+          <div className="pp-seal-wrap seal-bottom">
+            <div className="pp-seal-box"><Seal t={t} data={data} size={48} /></div>
+          </div>
+        </div>
+        <div className="pp-info-col">
+          <Field label="Surname" value={data.surname} large ac={navy} />
+          <Field label="Given names" value={data.givenName} large ac={navy} />
+          <Field label="Nationality" value={data.nationality || 'BRITISH CITIZEN'} ac={navy} />
+          <div className="pp-row">
+            <Field label="Date of birth" value={data.dateOfBirth} ac={navy} />
+            <Field label="Sex" value={data.sex} ac={navy} />
+          </div>
+          <Field label="Place of birth" value={data.registeredDomicile} ac={navy} />
+          <div className="pp-row">
+            <Field label="Date of issue" value={data.dateOfIssue} ac={navy} />
+            <Field label="Date of expiry" value={data.dateOfExpiry} ac={navy} />
+          </div>
+          <Field label="Authority" value={data.authority} ac={navy} />
+          <div className="pp-field">
+            <div className="pp-fl" style={{ color: navy }}>Signature of bearer / Signature du titulaire</div>
+            <SigDisplay data={data} accent={navy} />
+          </div>
+        </div>
+      </div>
+
+      <MRZSection mrz={mrz} mrzBg={t.mrzBg} mrzBdr={t.mrzBorder} />
+    </>
+  )
+}
+
 const PassportCard = forwardRef(function PassportCard({ data, template, watermarkImage, customBg }, ref) {
   const t = template || {}
   const mrz = generateMRZ(data, t)
@@ -783,6 +919,8 @@ const PassportCard = forwardRef(function PassportCard({ data, template, watermar
       )}
 
       {layout === 'default'   && <DefaultLayout   {...layoutProps} />}
+      {layout === 'usa'       && <USALayout       {...layoutProps} />}
+      {layout === 'uk'        && <UKLayout        {...layoutProps} />}
       {layout === 'australia' && <AustraliaLayout {...layoutProps} />}
       {layout === 'indonesia' && <IndonesiaLayout {...layoutProps} />}
       {layout === 'germany'   && <GermanyLayout   {...layoutProps} />}
