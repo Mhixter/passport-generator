@@ -9,6 +9,7 @@ import authRoutes from './routes/auth.js'
 import unitsRoutes from './routes/units.js'
 import paymentRoutes from './routes/payment.js'
 import adminRoutes from './routes/admin.js'
+import { initializeDatabase } from "./db.js";
 
 import { findUser, createUser, setUserAdmin } from './db.js'
 
@@ -19,6 +20,8 @@ const isProd = process.env.NODE_ENV === 'production'
 
 const DEFAULT_ADMIN_EMAIL = 'saidumuhammed664@gmail.com'
 const DEFAULT_ADMIN_PASS = 'Mhixter664@gmail.com'
+
+await initializeDatabase();
 
 async function seedDefaultAdmin() {
   try {
