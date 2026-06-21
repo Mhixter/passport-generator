@@ -42,8 +42,16 @@ function Generator() {
   const [bulkProgress, setBulkProgress] = useState(0)
   const [showBuyModal, setShowBuyModal] = useState(false)
   const [toast, setToast] = useState(null)
+  const [templateBGs, setTemplateBGs] = useState({})
   const passportRef = useRef(null)
   const template = TEMPLATES[templateId]
+
+  useEffect(() => {
+    fetch('/api/admin/template-backgrounds')
+      .then(r => r.ok ? r.json() : {})
+      .then(d => setTemplateBGs(d))
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     const params = new URLSearchParams(location.search)
@@ -195,7 +203,7 @@ function Generator() {
             )}
 
             <div className="preview-wrapper">
-              <PassportCard ref={passportRef} data={data} template={template} watermarkImage={watermarkImage} />
+              <PassportCard ref={passportRef} data={data} template={template} watermarkImage={watermarkImage} customBg={templateBGs[templateId] || null} />
             </div>
           </section>
         </div>

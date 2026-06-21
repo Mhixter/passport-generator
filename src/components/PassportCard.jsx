@@ -24,7 +24,7 @@ function formatMRZDate(dateStr) {
   return '000000'
 }
 
-const PassportCard = forwardRef(function PassportCard({ data, template, watermarkImage }, ref) {
+const PassportCard = forwardRef(function PassportCard({ data, template, watermarkImage, customBg }, ref) {
   const t = template || {}
   const mrz = generateMRZ(data, t)
   const accent = t.accentColor || '#b8860b'
@@ -49,8 +49,14 @@ const PassportCard = forwardRef(function PassportCard({ data, template, watermar
 
   return (
     <div className="passport-card" ref={ref} style={{ background: t.bgColor || '#f5f0dc' }}>
-      <div className="pp-bg-pattern" style={{ backgroundImage: t.bgPattern }} />
-      <div className="pp-bg-overlay" style={{ background: `linear-gradient(135deg, ${t.bgColor || '#f5f0dc'}cc 0%, ${t.bgColor || '#f5f0dc'}88 100%)` }} />
+      {customBg
+        ? <div className="pp-custom-bg" style={{ backgroundImage: `url(${customBg})` }} />
+        : <div className="pp-bg-pattern" style={{ backgroundImage: t.bgPattern }} />
+      }
+      <div className="pp-bg-overlay" style={{ background: customBg
+        ? `linear-gradient(135deg, ${t.bgColor || '#f5f0dc'}b0 0%, ${t.bgColor || '#f5f0dc'}70 100%)`
+        : `linear-gradient(135deg, ${t.bgColor || '#f5f0dc'}cc 0%, ${t.bgColor || '#f5f0dc'}88 100%)`
+      }} />
 
       {watermarkImage && (
         <div className="pp-watermark-img">
