@@ -11,14 +11,14 @@ router.post('/signup', async (req, res) => {
     const { email, password } = req.body
     if (!email || !password) return res.status(400).json({ error: 'Email and password required' })
     if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' })
-    const existing = findUser(email)
+    const existing = await findUser(email)
     if (existing) return res.status(409).json({ error: 'Email already registered' })
     const hashed = await bcrypt.hash(password, 10)
-    const user = createUser({ email, password: hashed })
+    const user = await createUser({ email, password: hashed })
     const token = jwt.sign({ id: user.id, email: user.email, is_admin: user.is_admin }, JWT_SECRET, { expiresIn: '7d' })
     res.json({ token, user: { id: user.id, email: user.email, units: user.units, is_admin: user.is_admin } })
   } catch (err) {
-    console.error(err)
+    console.error('Signup error:', err)
     res.status(500).json({ error: 'Server error' })
   }
 })
@@ -27,22 +27,27 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body
     if (!email || !password) return res.status(400).json({ error: 'Email and password required' })
-    const user = findUser(email)
+    const user = await findUser(email)
     if (!user) return res.status(401).json({ error: 'Invalid email or password' })
     const valid = await bcrypt.compare(password, user.password)
     if (!valid) return res.status(401).json({ error: 'Invalid email or password' })
     const token = jwt.sign({ id: user.id, email: user.email, is_admin: user.is_admin }, JWT_SECRET, { expiresIn: '7d' })
     res.json({ token, user: { id: user.id, email: user.email, units: user.units, is_admin: user.is_admin } })
   } catch (err) {
-    console.error(err)
+    console.error('Login error:', err)
     res.status(500).json({ error: 'Server error' })
   }
 })
 
-router.get('/me', authenticate, (req, res) => {
-  const user = findUser(req.user.email)
-  if (!user) return res.status(404).json({ error: 'User not found' })
-  res.json({ id: user.id, email: user.email, units: user.units, is_admin: user.is_admin })
+router.get('/me', authenticate, async (req, res) => {
+  try {
+    const user = await findUser(req.user.email)
+    if (!user) return res.status(404).json({ error: 'User not found' })
+    res.json({ id: user.id, email: user.email, units: user.units, is_admin: user.is_admin })
+  } catch (err) {
+    console.error('Me error:', err)
+    res.status(500).json({ error: 'Server error' })
+  }
 })
 
 export function authenticate(req, res, next) {

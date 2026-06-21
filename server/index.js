@@ -8,7 +8,7 @@ import authRoutes from './routes/auth.js'
 import unitsRoutes from './routes/units.js'
 import paymentRoutes from './routes/payment.js'
 import adminRoutes from './routes/admin.js'
-import { readDB, writeDB } from './db.js'
+import { findUser, createUser, setUserAdmin } from './db.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express()
@@ -19,34 +19,28 @@ const DEFAULT_ADMIN_EMAIL = 'saidumuhammed664@gmail.com'
 const DEFAULT_ADMIN_PASS = 'Mhixter664@gmail.com'
 
 async function seedDefaultAdmin() {
-  const db = readDB()
-  const exists = db.users.find(u => u.email.toLowerCase() === DEFAULT_ADMIN_EMAIL.toLowerCase())
-  if (!exists) {
-    const hashed = await bcrypt.hash(DEFAULT_ADMIN_PASS, 10)
-    db.users.push({
-      id: `u_admin_${Date.now()}`,
-      email: DEFAULT_ADMIN_EMAIL,
-      password: hashed,
-      units: 0,
-      is_admin: true,
-      created_at: new Date().toISOString(),
-    })
-    writeDB(db)
-    console.log(`Default admin created: ${DEFAULT_ADMIN_EMAIL}`)
-  } else if (!exists.is_admin) {
-    exists.is_admin = true
-    writeDB(db)
-    console.log(`Admin flag set for: ${DEFAULT_ADMIN_EMAIL}`)
-  }
-
-  const adminEmail = process.env.ADMIN_EMAIL
-  if (adminEmail) {
-    const envAdmin = db.users.find(u => u.email.toLowerCase() === adminEmail.toLowerCase())
-    if (envAdmin && !envAdmin.is_admin) {
-      envAdmin.is_admin = true
-      writeDB(db)
-      console.log(`Admin privileges granted to: ${adminEmail}`)
+  try {
+    let admin = await findUser(DEFAULT_ADMIN_EMAIL)
+    if (!admin) {
+      const hashed = await bcrypt.hash(DEFAULT_ADMIN_PASS, 10)
+      admin = await createUser({ email: DEFAULT_ADMIN_EMAIL, password: hashed })
+      await setUserAdmin(DEFAULT_ADMIN_EMAIL, true)
+      console.log(`Default admin created: ${DEFAULT_ADMIN_EMAIL}`)
+    } else if (!admin.is_admin) {
+      await setUserAdmin(DEFAULT_ADMIN_EMAIL, true)
+      console.log(`Admin flag set for: ${DEFAULT_ADMIN_EMAIL}`)
     }
+
+    const adminEmail = process.env.ADMIN_EMAIL
+    if (adminEmail) {
+      const envAdmin = await findUser(adminEmail)
+      if (envAdmin && !envAdmin.is_admin) {
+        await setUserAdmin(adminEmail, true)
+        console.log(`Admin privileges granted to: ${adminEmail}`)
+      }
+    }
+  } catch (err) {
+    console.error('seedDefaultAdmin error:', err.message)
   }
 }
 

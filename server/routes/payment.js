@@ -1,7 +1,7 @@
 import express from 'express'
 import axios from 'axios'
 import { authenticate } from './auth.js'
-import { findUser, updateUserUnits, addTransaction } from '../db.js'
+import { findUser, updateUserUnits, addTransaction, findTransaction, updateTransactionStatus } from '../db.js'
 
 const router = express.Router()
 
@@ -24,7 +24,7 @@ router.post('/initialize', authenticate, async (req, res) => {
     const pkg = PACKAGES.find(p => p.id === package_id)
     if (!pkg) return res.status(400).json({ error: 'Invalid package' })
 
-    const user = findUser(req.user.email)
+    const user = await findUser(req.user.email)
     if (!user) return res.status(404).json({ error: 'User not found' })
 
     const reference = `ppg_${Date.now()}_${Math.random().toString(36).slice(2)}`
@@ -51,14 +51,14 @@ router.post('/initialize', authenticate, async (req, res) => {
       headers: { Authorization: `Bearer ${PAYSTACK_SECRET}` },
     })
 
-    addTransaction({
+    await addTransaction({
       user_id: user.id,
       email: user.email,
-      reference,
       package_id: pkg.id,
       units: pkg.units,
       amount_naira: pkg.naira,
       status: 'pending',
+      type: `ppg_${reference}`,
     })
 
     res.json({ authorization_url: response.data.data.authorization_url, reference })
@@ -78,11 +78,9 @@ router.get('/callback', async (req, res) => {
     const { status, metadata } = response.data.data
     if (status === 'success') {
       const { user_id, units } = metadata
-      updateUserUnits(user_id, parseInt(units))
-      const db = await import('../db.js')
-      const d = db.readDB()
-      const tx = d.transactions.find(t => t.reference === reference)
-      if (tx) { tx.status = 'success'; db.writeDB(d) }
+      await updateUserUnits(user_id, parseInt(units))
+      const tx = await findTransaction(`ppg_${reference}`)
+      if (tx) await updateTransactionStatus(tx.id, 'success')
       res.redirect('/?payment=success')
     } else {
       res.redirect('/?payment=failed')
@@ -102,12 +100,10 @@ router.post('/verify', authenticate, async (req, res) => {
     })
     const { status, metadata } = response.data.data
     if (status === 'success') {
-      const d = (await import('../db.js')).readDB()
-      const tx = d.transactions.find(t => t.reference === reference)
+      const tx = await findTransaction(`ppg_${reference}`)
       if (tx && tx.status !== 'success') {
-        updateUserUnits(metadata.user_id, parseInt(metadata.units))
-        tx.status = 'success';
-        (await import('../db.js')).writeDB(d)
+        await updateUserUnits(metadata.user_id, parseInt(metadata.units))
+        await updateTransactionStatus(tx.id, 'success')
         res.json({ success: true, units_added: metadata.units })
       } else if (tx?.status === 'success') {
         res.json({ success: true, already_credited: true })
